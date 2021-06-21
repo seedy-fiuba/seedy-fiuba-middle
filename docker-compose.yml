@@ -1,0 +1,9 @@
+version: '3'
+services:
+  http:
+    build: ./
+    container_name: middle-api
+    environment:
+      - PORT=80
+    ports:
+      - 80:80
