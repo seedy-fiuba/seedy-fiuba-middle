@@ -15,6 +15,5 @@ def helloWorld():
 
 @app.post('/reviewer/{reviewerId}/project/{projectId}')
 async def requestReviewerForProject(reviewerId: int, projectId: int):
-    print(f"Will request reviewer {reviewerId} for project {projectId}")
     data = await review_controller.requestReview(reviewerId, projectId)
     return data

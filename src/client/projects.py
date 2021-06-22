@@ -14,9 +14,7 @@ async def getProject(projectId: int):
     return data
 
 async def updateProjectStatus(projectId: int, status: str):
-    print("client updating project status")
     url = f'{base_url()}/api/project/{projectId}'
-    print(f"url: {url}");
     body = {
         'status': status
     }
@@ -24,8 +22,6 @@ async def updateProjectStatus(projectId: int, status: str):
     async with httpx.AsyncClient() as client:
         h = {'X-override-token': 'true'}
         resp: httpx.Response = await client.put(url, json=body, headers=h)
-
-        print(f"Status code: {resp.status_code}")
 
         data = resp.json()
 

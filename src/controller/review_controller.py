@@ -2,7 +2,6 @@ from ..client import projects
 
 async def requestReview(reviewerId: int, projectId: int):
     # Update project with status pendingReviewer
-    print(f"Will update project status to pendingReviewer")
     project = await projects.updateProjectStatus(projectId, 'pending-reviewer')
 
     # Create review request in users TODO
