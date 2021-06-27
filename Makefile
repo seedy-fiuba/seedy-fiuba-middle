@@ -1,6 +1,9 @@
 run:
 	docker-compose up --build
 
+rundocker:
+	docker compose up --build
+
 clean:
 	docker stop middle-api
 	docker rm  middle-api
