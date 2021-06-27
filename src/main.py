@@ -1,10 +1,14 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from .controller import review_controller
 from dotenv import load_dotenv
+from .router import projects
+from .dependencies import getTokenHeader
 
 load_dotenv()  # take environment variables from .env.
 
-app = FastAPI()
+app = FastAPI(dependencies=[Depends(getTokenHeader)])
+app.include_router(projects.router)
+
 print("app is up!")
 
 
