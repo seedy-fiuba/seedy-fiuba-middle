@@ -129,4 +129,6 @@ dmypy.json
 .pyre/
 
 #IntelliJ
-.idea/*
+.idea
+.idea/middle.iml
+.idea/misc.xml
