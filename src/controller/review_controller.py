@@ -1,15 +1,43 @@
-from ..client import projects
-from ..client import users
+from ..client import projects as projects_client, users as users_client
+from ..models import projects, users
+from ..payloads import ReviewRequestPayload, ReviewUpdatePayload
+from ..responses import ReviewResponseModel
 
 
-async def request_review(review):
+PROJECT_STATUS_FOR_REVIEW_STATUS = {
+    users.ReviewStatus.approved: projects.Status.IN_PROGRESS,
+    users.ReviewStatus.rejected: projects.Status.CREATED
+}
+
+
+async def request_review(review: ReviewRequestPayload):
     # Update project with status pendingReviewer
-    project = await projects.update_project_status(review.projectId, projects.Status.PENDING_REVIEWER)
+    project = await projects_client.update_project(review.projectId, {'status': projects.Status.PENDING_REVIEWER})
 
     # Create review request in users
-    review_request = await users.create_review_request(review)
+    review_request = await users_client.create_review_request(review)
 
-    return {
-        "review": review_request,
-        "project": project
-    }
+
+    return ReviewResponseModel(
+        review=review_request,
+        project=project
+    )
+
+
+async def update_review(reviewId: int, payload: ReviewUpdatePayload):
+    # Update review status
+    review = await users_client.update_review_request(reviewId, payload.status)
+    print(review)
+    # Update project status
+    project = await projects_client.update_project(review.projectId,
+                                                   {
+                                                       'status': PROJECT_STATUS_FOR_REVIEW_STATUS[payload.status],
+                                                       'reviewerId': review.reviewerId
+                                                   })
+
+    return ReviewResponseModel(
+        review=review,
+        project=project
+    )
+
+

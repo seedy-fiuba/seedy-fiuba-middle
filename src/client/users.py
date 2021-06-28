@@ -1,16 +1,8 @@
 import httpx
 import os
+from ..models.users import ReviewStatus, Review
 from ..exceptions import MiddleException
-from pydantic import BaseModel
-
-
-class Review(BaseModel):
-    reviewerId: int
-    projectId: int
-    id: int
-    status: str
-    createdAt: str
-    updatedAt: str
+from pydantic import parse_obj_as
 
 
 async def create_review_request(payload):
@@ -21,20 +13,24 @@ async def create_review_request(payload):
         if resp.status_code >= 400:
             print("Create user review failed: " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
-        data = resp.json()
+        data = parse_obj_as(Review, resp.json())
 
     return data
 
 
-async def update_review_request(id: int, status: str):
+async def update_review_request(id: int, status: ReviewStatus):
     url = f'{base_url()}/reviews/{id}'
 
+    body = {
+        'status': status.value
+    }
+
     async with httpx.AsyncClient() as client:
-        resp: httpx.Response = await client.put(url, json={status: status})
+        resp: httpx.Response = await client.put(url, json=body)
         if resp.status_code >= 400:
             print("Update user review failed: " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
-        data = resp.json()
+        data = parse_obj_as(Review, resp.json())
 
     return data
 
@@ -55,7 +51,7 @@ async def search_review_request(params):
         if resp.status_code >= 400:
             print("Search user reviews failed: " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
-        data = resp.json()
+        data = parse_obj_as(Review, resp.json())
 
     return data
 

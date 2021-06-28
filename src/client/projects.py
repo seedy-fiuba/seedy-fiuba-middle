@@ -1,43 +1,8 @@
 import httpx
 import os
-from enum import Enum
+from ..models.projects import Status, Project
 from ..exceptions import MiddleException
-from pydantic import BaseModel
-from typing import List
-
-
-class Status(Enum):
-    PENDING_REVIEWER = 'pending-reviewer',
-    IN_PROGRESS = 'in-progress'
-
-
-class ProjectStage(BaseModel):
-    track: str
-    targetAmount: float
-    status: str
-
-
-class ProjectLocation(BaseModel):
-    coordinates: List[float]
-    type: str
-
-
-class Project(BaseModel):
-    mediaUrls: List[str] = []
-    hashtags: List[str] = []
-    id: int
-    stages: List[ProjectStage] = []
-    title: str
-    description: str
-    category: str
-    status: str
-    fundedAmount: float
-    location: ProjectLocation
-    ownerId: int
-    reviewerId: int
-    finishDate: str
-    createdAt: str
-    updatedAt: str
+from pydantic import parse_obj_as
 
 
 async def get_project(projectId: int):
@@ -51,27 +16,23 @@ async def get_project(projectId: int):
             print("Get project failed: " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
 
-        data = resp.json()
+        data = parse_obj_as(Project, resp.json())
 
     return data
 
 
-async def update_project_status(projectId: int, status: Status):
+async def update_project(projectId: int, data: dict):
     url = f'{base_url()}/api/project/{projectId}'
-
-    body = {
-        'status': status.value[0]
-    }
 
     async with httpx.AsyncClient() as client:
         h = {'X-override-token': 'true'}
-        resp: httpx.Response = await client.put(url, json=body, headers=h)
+        resp: httpx.Response = await client.put(url, json=data, headers=h)
 
         if resp.status_code >= 400:
             print("Update project failed: " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
 
-        data = resp.json()
+        data = parse_obj_as(Project, resp.json())
 
     return data
 

@@ -1,9 +1,8 @@
 from fastapi import FastAPI, Request
 from .controller import review_controller
 from dotenv import load_dotenv
-from pydantic import BaseModel
-from .client import projects
-from .client import users
+from .responses import ReviewResponseModel
+from .payloads import ReviewRequestPayload, ReviewUpdatePayload
 from src import exceptions
 from fastapi.responses import JSONResponse
 
@@ -11,16 +10,6 @@ load_dotenv()  # take environment variables from .env.
 
 app = FastAPI()
 print("app is up!")
-
-
-class ReviewRequest(BaseModel):
-    reviewerId: int
-    projectId: int
-
-
-class ReviewResponseModel(BaseModel):
-    project: projects.Project
-    review: users.Review
 
 
 @app.exception_handler(exceptions.MiddleException)
@@ -37,6 +26,11 @@ def hello_world():
 
 
 @app.post('/reviews', response_model=ReviewResponseModel, status_code=201)
-async def request_reviewer_for_project(review: ReviewRequest):
-    data = await review_controller.request_review(review)
-    return data
+async def request_reviewer_for_project(review: ReviewRequestPayload):
+    return await review_controller.request_review(review)
+
+
+@app.put('/reviews/{reviewId}', response_model=ReviewResponseModel)
+async def update_review(reviewId: int, payload: ReviewUpdatePayload):
+    return await review_controller.update_review(reviewId, payload)
+
