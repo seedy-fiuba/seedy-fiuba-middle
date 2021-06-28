@@ -2,6 +2,7 @@ import httpx
 import os
 from ..models.users import ReviewStatus, Review
 from ..exceptions import MiddleException
+from ..responses import ReviewPaginatedResponse
 from pydantic import parse_obj_as
 
 
@@ -42,7 +43,7 @@ async def search_review_request(params):
         count = 0
     for key in params:
         count += 1
-        url += key + '=' + params[key]
+        url += key + '=' + str(params[key])
         if count < len(params):
             url += '&'
 
@@ -51,7 +52,7 @@ async def search_review_request(params):
         if resp.status_code >= 400:
             print("Search user reviews failed: " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
-        data = parse_obj_as(Review, resp.json())
+        data = parse_obj_as(ReviewPaginatedResponse, resp.json())
 
     return data
 

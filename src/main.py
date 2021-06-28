@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Request
 from .controller import review_controller
 from dotenv import load_dotenv
-from .responses import ReviewResponseModel
+from .responses import ReviewResponseModel, ReviewPaginatedResponse
 from .payloads import ReviewRequestPayload, ReviewUpdatePayload
 from src import exceptions
 from fastapi.responses import JSONResponse
+from typing import List, Optional
 
 load_dotenv()  # take environment variables from .env.
 
@@ -33,4 +34,9 @@ async def request_reviewer_for_project(review: ReviewRequestPayload):
 @app.put('/reviews/{reviewId}', response_model=ReviewResponseModel)
 async def update_review(reviewId: int, payload: ReviewUpdatePayload):
     return await review_controller.update_review(reviewId, payload)
+
+
+@app.get('/reviews', response_model=ReviewPaginatedResponse)
+async def get_reviews(reviewerId: Optional[str] = None, status: Optional[str] = None):
+    return await review_controller.get_reviews(reviewerId, status)
 

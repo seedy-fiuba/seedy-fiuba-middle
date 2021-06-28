@@ -41,3 +41,13 @@ async def update_review(reviewId: int, payload: ReviewUpdatePayload):
     )
 
 
+async def get_reviews(reviewerId: str, status: str):
+    params = {}
+
+    if reviewerId is not None:
+        params['reviewerId'] = reviewerId
+
+    if status is not None:
+        params['status'] = status
+
+    return await users_client.search_review_request(params)
