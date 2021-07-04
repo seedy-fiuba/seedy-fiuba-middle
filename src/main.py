@@ -37,6 +37,6 @@ async def update_review(review_id: int, payload: ReviewUpdatePayload):
 
 
 @app.get('/reviews', response_model=ReviewProjectSearchResponse)
-async def get_reviews(reviewer_id: Optional[str] = None, status: Optional[str] = None):
-    return await review_controller.get_reviews(reviewer_id, status)
+async def get_reviews(reviewerId: Optional[str] = None, status: Optional[str] = None):
+    return await review_controller.get_reviews(reviewerId, status)
 
