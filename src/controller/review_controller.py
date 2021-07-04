@@ -2,7 +2,6 @@ from ..client import projects as projects_client, users as users_client
 from ..models import projects, users
 from ..payloads import ReviewRequestPayload, ReviewUpdatePayload
 from ..responses import ReviewResponseModel, ReviewProjectSearchResponse
-import json
 
 
 PROJECT_STATUS_FOR_REVIEW_STATUS = {

@@ -8,6 +8,7 @@ class Status(str, Enum):
     IN_PROGRESS = 'in-progress',
     CREATED = 'created'
 
+
 class ProjectStage(BaseModel):
     track: str
     targetAmount: float
