@@ -38,19 +38,11 @@ async def update_review_request(id: int, status: ReviewStatus):
 
 async def search_review_request(params):
     url = f'{base_url()}/reviews'
-    if len(params) > 0:
-        url += '?'
-        count = 0
-    for key in params:
-        count += 1
-        url += key + '=' + str(params[key])
-        if count < len(params):
-            url += '&'
 
     async with httpx.AsyncClient() as client:
-        resp: httpx.Response = await client.get(url)
+        resp: httpx.Response = await client.get(url, params=params)
         if resp.status_code >= 400:
-            print("Search user reviews failed: " + resp.text)
+            print("Search user reviews failed with status " + str(resp.status_code) +  ":  " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
         data = parse_obj_as(ReviewPaginatedResponse, resp.json())
 

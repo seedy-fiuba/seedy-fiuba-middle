@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from .controller import review_controller
 from dotenv import load_dotenv
-from .responses import ReviewResponseModel, ReviewPaginatedResponse
+from .responses import ReviewResponseModel, ReviewProjectSearchResponse
 from .payloads import ReviewRequestPayload, ReviewUpdatePayload
 from src import exceptions
 from fastapi.responses import JSONResponse
@@ -31,12 +31,12 @@ async def request_reviewer_for_project(review: ReviewRequestPayload):
     return await review_controller.request_review(review)
 
 
-@app.put('/reviews/{reviewId}', response_model=ReviewResponseModel)
-async def update_review(reviewId: int, payload: ReviewUpdatePayload):
-    return await review_controller.update_review(reviewId, payload)
+@app.put('/reviews/{review_id}', response_model=ReviewResponseModel)
+async def update_review(review_id: int, payload: ReviewUpdatePayload):
+    return await review_controller.update_review(review_id, payload)
 
 
-@app.get('/reviews', response_model=ReviewPaginatedResponse)
-async def get_reviews(reviewerId: Optional[str] = None, status: Optional[str] = None):
-    return await review_controller.get_reviews(reviewerId, status)
+@app.get('/reviews', response_model=ReviewProjectSearchResponse)
+async def get_reviews(reviewer_id: Optional[str] = None, status: Optional[str] = None):
+    return await review_controller.get_reviews(reviewer_id, status)
 

@@ -1,7 +1,8 @@
 from ..client import projects as projects_client, users as users_client
 from ..models import projects, users
 from ..payloads import ReviewRequestPayload, ReviewUpdatePayload
-from ..responses import ReviewResponseModel
+from ..responses import ReviewResponseModel, ReviewProjectSearchResponse
+import json
 
 
 PROJECT_STATUS_FOR_REVIEW_STATUS = {
@@ -41,13 +42,30 @@ async def update_review(reviewId: int, payload: ReviewUpdatePayload):
     )
 
 
-async def get_reviews(reviewerId: str, status: str):
+async def get_reviews(reviewer_id: str, status: str):
     params = {}
 
-    if reviewerId is not None:
-        params['reviewerId'] = reviewerId
+    if reviewer_id is not None:
+        params['reviewerId'] = reviewer_id
 
     if status is not None:
         params['status'] = status
 
-    return await users_client.search_review_request(params)
+    reviews = await users_client.search_review_request(params)
+
+    projects_ids = list(map(lambda r: str(r.projectId), reviews.results))
+    projects_results = await projects_client.search_project({'id': ",".join(projects_ids)})
+
+    search_results = []
+
+    for review in reviews.results:
+        project = list(filter(lambda p: p.id == review.projectId, projects_results.results))
+        if len(project) > 0:
+            project = project[0]
+        else:
+            project = None
+
+        result = ReviewResponseModel(review=review, project=project)
+        search_results.append(result)
+
+    return ReviewProjectSearchResponse(size=reviews.size, results=search_results)
