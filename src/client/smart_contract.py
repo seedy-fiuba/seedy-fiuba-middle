@@ -1,7 +1,7 @@
 import httpx
 import os
-from .payloads.smart_contract import CreateSCProject
-from .responses.smart_contract import CreateProjectResponse
+from .payloads.smart_contract import CreateSCProject, FundSCProject, AcceptSCProjectStage
+from .responses.smart_contract import CreateProjectResponse, FundProjectResponse, AcceptStageResponse
 from ..exceptions import MiddleException
 from pydantic import parse_obj_as
 
@@ -15,6 +15,32 @@ async def create_project(payload: CreateSCProject):
             print("Create project in smart contract failed: " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
         data = parse_obj_as(CreateProjectResponse, resp.json())
+
+    return data
+
+
+async def fund_project(wallet_id: int, payload: FundSCProject):
+    url = f"{base_url()}/fund/projects/{wallet_id}"
+
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp: httpx.Response = await client.post(url, json=vars(payload))
+        if resp.status_code >= 400:
+            print("Fund project in smart contract failed: " + resp.text)
+            raise MiddleException(status=resp.status_code, detail=parse_error(resp))
+        data = parse_obj_as(FundProjectResponse, resp.json())
+
+    return data
+
+
+async def accept_stage(wallet_id: int, payload: AcceptSCProjectStage):
+    url = f"{base_url()}/projects/{wallet_id}"
+
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp: httpx.Response = await client.put(url, json=vars(payload))
+        if resp.status_code >= 400:
+            print("Accept project stage in smart contract failed: " + resp.text)
+            raise MiddleException(status=resp.status_code, detail=parse_error(resp))
+        data = parse_obj_as(AcceptStageResponse, resp.json())
 
     return data
 

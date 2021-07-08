@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Request
-from .controller import review_controller
+from .controller import review_controller, projects_controller
 from dotenv import load_dotenv
 from .responses import ReviewResponseModel, ReviewProjectSearchResponse
-from .payloads import ReviewRequestPayload, ReviewUpdatePayload
+from .payloads import ReviewRequestPayload, ReviewUpdatePayload, FundProjectPayload, AcceptStagePayload
 from src import exceptions
 from fastapi.responses import JSONResponse
 from typing import List, Optional
@@ -26,6 +26,7 @@ def hello_world():
     return 'MiddleSeedyFiuba :)'
 
 
+# REVIEWS: TODO: Armar router para reviews
 @app.post('/reviews', response_model=ReviewResponseModel, status_code=201)
 async def request_reviewer_for_project(review: ReviewRequestPayload):
     return await review_controller.request_review(review)
@@ -39,4 +40,15 @@ async def update_review(review_id: int, payload: ReviewUpdatePayload):
 @app.get('/reviews', response_model=ReviewProjectSearchResponse)
 async def get_reviews(reviewerId: Optional[str] = None, status: Optional[str] = None):
     return await review_controller.get_reviews(reviewerId, status)
+
+
+# PROJECTS: TODO: Armar router para projects
+@app.post('/projects/{project_id}/fund')
+async def fund_project(project_id: int, payload: FundProjectPayload):
+    return await projects_controller.fund_project(project_id, payload)
+
+
+@app.post('/projects/{project_id}/stages/{stage_id}/accept')
+async def accept_stage(project_id: int, stage_id: int, payload: AcceptStagePayload):
+    return await projects_controller.accept_stage(project_id, stage_id, payload)
 

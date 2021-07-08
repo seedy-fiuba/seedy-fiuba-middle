@@ -2,22 +2,10 @@ from ..client import projects as projects_client, users as users_client, smart_c
 from ..models import projects, users
 from ..client.payloads.smart_contract import CreateSCProject
 from ..client.payloads.projects import UpdateProjectPayload
-from ..client.responses.smart_contract import ProjectStatus
 from ..payloads import ReviewRequestPayload, ReviewUpdatePayload
 from ..responses import ReviewResponseModel, ReviewProjectSearchResponse
 from ..exceptions import MiddleException
-
-
-PROJECT_STATUS_FOR_REVIEW_STATUS = {
-    users.ReviewStatus.approved: projects.Status.FUNDING,
-    users.ReviewStatus.rejected: projects.Status.CREATED
-}
-
-PROJECT_STATUS_FOR_SC_STATUS = {
-    ProjectStatus.FUNDING: projects.Status.FUNDING,
-    ProjectStatus.IN_PROGRESS: projects.Status.IN_PROGRESS,
-    ProjectStatus.COMPLETED: projects.Status.COMPLETED
-}
+from ..utils.map_status import PROJECT_STATUS_FOR_REVIEW_STATUS, PROJECT_STATUS_FOR_SC_STATUS
 
 
 async def request_review(review: ReviewRequestPayload):

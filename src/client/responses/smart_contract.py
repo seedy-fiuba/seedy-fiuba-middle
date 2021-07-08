@@ -15,7 +15,23 @@ class CreateProjectResponse(BaseModel):
     stagesCost: List[float] = []
     projectOwnerAddress: str = None
     projectReviewerAddress: str = None
-    projectStatus: str = None
+    projectStatus: ProjectStatus = None
     currentStage: int = None
     missingAmount: float = None
+
+
+class FundProjectResponse(BaseModel):
+    txHash: str = None
+    projectWalletId: str = None
+    fundsReceived: str = None
+    funderAddress: str = None
+    missingAmount: str = None
+    projectStatus: ProjectStatus = None
+
+
+class AcceptStageResponse(BaseModel):
+    txHash: str = None
+    projectWalletId: int = None
+    stageCompleted: int = None
+    projectStatus: ProjectStatus = None
 
