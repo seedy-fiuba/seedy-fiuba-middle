@@ -6,7 +6,9 @@ from enum import Enum
 class Status(str, Enum):
     PENDING_REVIEWER = 'pending-reviewer',
     IN_PROGRESS = 'in-progress',
-    CREATED = 'created'
+    CREATED = 'created',
+    FUNDING = 'funding',
+    COMPLETED = 'completed'
 
 
 class ProjectStage(BaseModel):

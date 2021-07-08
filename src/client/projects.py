@@ -3,13 +3,14 @@ import os
 from ..models.projects import Status, Project
 from ..exceptions import MiddleException
 from ..responses import ProjectPaginatedResponse
+from .payloads.projects import UpdateProjectPayload
 from pydantic import parse_obj_as
 
 
 async def get_project(projectId: int):
     url = f'{base_url()}/api/project/{projectId}'
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30.0) as client:
         h = {'X-override-token': 'true'}
         resp: httpx.Response = await client.get(url, headers=h)
 
@@ -22,12 +23,12 @@ async def get_project(projectId: int):
     return data
 
 
-async def update_project(projectId: int, data: dict):
+async def update_project(projectId: int, data: UpdateProjectPayload):
     url = f'{base_url()}/api/project/{projectId}'
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30.0) as client:
         h = {'X-override-token': 'true'}
-        resp: httpx.Response = await client.put(url, json=data, headers=h)
+        resp: httpx.Response = await client.put(url, json={k: v for k, v in vars(data).items() if v is not None}, headers=h)
 
         if resp.status_code >= 400:
             print("Update project failed: " + resp.text)
@@ -40,7 +41,7 @@ async def update_project(projectId: int, data: dict):
 async def search_project(params):
     url = f'{base_url()}/api/project/search'
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30.0) as client:
         h = {'X-override-token': 'true'}
         resp: httpx.Response = await client.get(url, headers=h,  params=params)
         if resp.status_code >= 400:
