@@ -60,7 +60,7 @@ async def fund_project(projectId: int, data: FundProjectClientPayload):
 
     async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
         h = {'X-override-token': 'true'}
-        resp: httpx.Response = await client.put(url, json={k: v for k, v in vars(data).items() if v is not None},
+        resp: httpx.Response = await client.post(url, json={k: v for k, v in vars(data).items() if v is not None},
                                                 headers=h)
 
         if resp.status_code >= 400:
