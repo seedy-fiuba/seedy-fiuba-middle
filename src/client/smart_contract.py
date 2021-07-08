@@ -25,6 +25,8 @@ async def create_project(payload: CreateSCProject):
 async def fund_project(wallet_id: int, payload: FundSCProject):
     url = f"{base_url()}/fund/projects/{wallet_id}"
 
+
+    print(f"Funding SC project with ID: {wallet_id} and payload: {payload.dict()}")
     async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
         resp: httpx.Response = await client.post(url, json=vars(payload))
         if resp.status_code >= 400:
@@ -38,6 +40,7 @@ async def fund_project(wallet_id: int, payload: FundSCProject):
 async def accept_stage(wallet_id: int, payload: AcceptSCProjectStage):
     url = f"{base_url()}/projects/{wallet_id}"
 
+    print(f"Accepting stage SC project with ID: {wallet_id} and payload: {payload.dict()}")
     async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
         resp: httpx.Response = await client.put(url, json=vars(payload))
         if resp.status_code >= 400:
