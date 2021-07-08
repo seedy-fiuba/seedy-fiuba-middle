@@ -35,6 +35,8 @@ class Project(BaseModel):
     location: Optional[ProjectLocation]
     ownerId: int
     reviewerId: Optional[int]
+    walletId: Optional[int]
+    currentStageId: Optional[int]
     finishDate: str
     createdAt: str
     updatedAt: str
