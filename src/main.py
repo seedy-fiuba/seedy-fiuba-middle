@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
-from .controller import review_controller, projects_controller
+from .controller import review_controller, projects_controller, wallet_controller
 from dotenv import load_dotenv
-from .responses import ReviewResponseModel, ReviewProjectSearchResponse
+from .responses import ReviewResponseModel, ReviewProjectSearchResponse, WalletBalanceResponse
 from .payloads import ReviewRequestPayload, ReviewUpdatePayload, FundProjectPayload, AcceptStagePayload
 from src import exceptions
 from fastapi.responses import JSONResponse
@@ -52,3 +52,8 @@ async def fund_project(project_id: int, payload: FundProjectPayload):
 async def accept_stage(project_id: int, stage_id: int, payload: AcceptStagePayload):
     return await projects_controller.accept_stage(project_id, stage_id, payload)
 
+
+# WALLET
+@app.get('/wallet/{user_id}', response_model=WalletBalanceResponse)
+async def get_wallet_balance(user_id: int):
+    return await wallet_controller.get_balance(user_id)
