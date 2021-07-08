@@ -15,7 +15,7 @@ class ReviewUpdatePayload(BaseModel):
 # Projects
 class FundProjectPayload(BaseModel):
     funderId: int
-    amount: int
+    amount: float
 
 
 class AcceptStagePayload(BaseModel):
