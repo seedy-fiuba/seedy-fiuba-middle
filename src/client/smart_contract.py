@@ -6,7 +6,7 @@ from ..responses import WalletBalanceResponse
 from ..exceptions import MiddleException
 from pydantic import parse_obj_as
 
-CLIENT_TIMEOUT = 30g0.0
+CLIENT_TIMEOUT = 300.0
 
 
 async def create_project(payload: CreateSCProject):
