@@ -60,6 +60,9 @@ async def accept_stage(project_id: int, stage_id: int, payload: AcceptStagePaylo
     if project.walletId is None:
         raise MiddleException(status=400, detail={'error': 'Project does not have a wallet', 'status': 400})
 
+    if project.status != Status.STAGE_PENDING_REVIEWER:
+        raise MiddleException(status=400, detail={'error': 'Project is not pending review for stage', 'status': 400})
+
     # Accept stage in Smart Contract
     sc_response = await sc_client.accept_stage(project.walletId,
                                                AcceptSCProjectStage(
