@@ -52,6 +52,9 @@ async def fund_project(project_id: int, payload: FundProjectPayload):
 async def accept_stage(project_id: int, stage_id: int, payload: AcceptStagePayload):
     return await projects_controller.accept_stage(project_id, stage_id, payload)
 
+@app.post('/projects/{project_id}/review')
+async def request_stage_review(project_id: int):
+    return await projects_controller.request_stage_review(project_id)
 
 # WALLET
 @app.get('/wallet/{user_id}', response_model=WalletBalanceResponse)

@@ -5,6 +5,7 @@ from enum import Enum
 
 class Status(str, Enum):
     PENDING_REVIEWER = 'pending-reviewer',
+    STAGE_PENDING_REVIEWER = 'stage-pending-reviewer',
     IN_PROGRESS = 'in-progress',
     CREATED = 'created',
     FUNDING = 'funding',
