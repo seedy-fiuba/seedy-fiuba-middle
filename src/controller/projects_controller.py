@@ -67,14 +67,14 @@ async def accept_stage(project_id: int, stage_id: int, payload: AcceptStagePaylo
     sc_response = await sc_client.accept_stage(project.walletId,
                                                AcceptSCProjectStage(
                                                    reviewerPrivateKey=reviewer.walletPrivateKey,
-                                                   completedStage=stage_id
+                                                   completedStage=stage_id + 1
                                                ))
 
     # Update project in Projects Api
     if sc_response.projectStatus == ProjectStatus.IN_PROGRESS:
         update_project_payload = UpdateProjectPayload(
                                              status=PROJECT_STATUS_FOR_SC_STATUS[sc_response.projectStatus],
-                                             currentStageId=sc_response.stageCompleted + 1
+                                             currentStageId=sc_response.stageCompleted
                                          )
     else:
         update_project_payload = UpdateProjectPayload(
