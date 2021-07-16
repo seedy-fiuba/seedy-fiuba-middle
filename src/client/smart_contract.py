@@ -1,6 +1,6 @@
 import httpx
 import os
-from .payloads.smart_contract import CreateSCProject, FundSCProject, AcceptSCProjectStage
+from .payloads.smart_contract import CreateSCProject, FundSCProject, AcceptSCProjectStage, TransferSCFunds
 from .responses.smart_contract import CreateProjectResponse, FundProjectResponse, AcceptStageResponse
 from ..responses import WalletBalanceResponse
 from ..exceptions import MiddleException
@@ -62,6 +62,18 @@ async def get_balance(user_private_key: str):
         data = parse_obj_as(WalletBalanceResponse, resp.json())
 
     return data
+
+async def transfer_funds(payload: TransferSCFunds):
+    url = f"{base_url()}/transfer/funds"
+
+    print(f"Transferring {str(payload.amount)} to: {payload.destinationAddress} and from: {payload.sourcePrivateKey}")
+    async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
+        resp: httpx.Response = await client.post(url, json=vars(payload))
+        if resp.status_code >= 400:
+            print(f"Transfer funds failed with status {str(resp.status_code)}: {resp.text}")
+            raise MiddleException(status=resp.status_code, detail=parse_error(resp))
+        print("Transferring funds response: " + resp.text)
+
 
 def base_url():
     return os.environ['SMART_CONTRACT_BASE_URL']

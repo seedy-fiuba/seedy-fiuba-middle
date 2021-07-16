@@ -17,3 +17,9 @@ class AcceptSCProjectStage(BaseModel):
     reviewerPrivateKey: str
     completedStage: int
 
+
+class TransferSCFunds(BaseModel):
+    sourcePrivateKey: str
+    destinationAddress: str
+    amount: float
+

@@ -21,3 +21,9 @@ class FundProjectPayload(BaseModel):
 class AcceptStagePayload(BaseModel):
     reviewerId: int
 
+
+class TransferFundsPayload(BaseModel):
+    destinationAddress: str
+    amount: float
+
+
