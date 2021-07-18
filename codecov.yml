@@ -16,4 +16,4 @@ coverage:
           - develop
         if_ci_failed: error #success, failure, error, ignore
         informational: false
-        only_pulls: trueg
+        only_pulls: true
