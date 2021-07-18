@@ -12,5 +12,18 @@ class ReviewUpdatePayload(BaseModel):
     status: ReviewStatus
 
 
+# Projects
+class FundProjectPayload(BaseModel):
+    funderId: int
+    amount: float
+
+
+class AcceptStagePayload(BaseModel):
+    reviewerId: int
+
+
+class TransferFundsPayload(BaseModel):
+    destinationAddress: str
+    amount: float
 
 

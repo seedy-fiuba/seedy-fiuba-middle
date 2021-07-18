@@ -21,3 +21,8 @@ class ProjectPaginatedResponse(BaseModel):
 class ReviewProjectSearchResponse(BaseModel):
     size: int
     results: List[ReviewResponseModel]
+
+
+class WalletBalanceResponse(BaseModel):
+    balance: float
+

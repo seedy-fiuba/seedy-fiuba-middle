@@ -5,14 +5,17 @@ from enum import Enum
 
 class Status(str, Enum):
     PENDING_REVIEWER = 'pending-reviewer',
+    STAGE_PENDING_REVIEWER = 'stage-pending-reviewer',
     IN_PROGRESS = 'in-progress',
-    CREATED = 'created'
+    CREATED = 'created',
+    FUNDING = 'funding',
+    COMPLETED = 'completed'
 
 
 class ProjectStage(BaseModel):
-    track: str
-    targetAmount: float
-    status: str
+    track: str = None
+    targetAmount: float = None
+    id: int = None
 
 
 class ProjectLocation(BaseModel):
@@ -23,18 +26,20 @@ class ProjectLocation(BaseModel):
 class Project(BaseModel):
     mediaUrls: List[str] = []
     hashtags: List[str] = []
-    id: int
+    id: int = None
     stages: List[ProjectStage] = []
-    title: str
-    description: str
-    category: str
-    status: str
-    fundedAmount: float
+    title: str = None
+    description: str = None
+    category: str = None
+    status: str = None
+    fundedAmount: float = None
     location: Optional[ProjectLocation]
-    ownerId: int
+    ownerId: int = None
     reviewerId: Optional[int]
-    finishDate: str
-    createdAt: str
-    updatedAt: str
+    walletId: Optional[int]
+    currentStageId: Optional[int]
+    finishDate: str = None
+    createdAt: str = None
+    updatedAt: str = None
 
 
