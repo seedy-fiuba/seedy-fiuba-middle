@@ -1,8 +1,10 @@
+import pytest
 from fastapi.testclient import TestClient
 from src.main import app
 from src.responses import ReviewResponseModel
 from src.models.users import Review
 from src.models.projects import Project
+from httpx import AsyncClient
 
 client = TestClient(app)
 
@@ -14,7 +16,8 @@ def test_read_main():
 
 
 # REVIEWS
-def test_post_review(mocker):
+@pytest.mark.asyncio
+async def test_post_review(mocker):
     review_mock = Review(reviewerId=0,
                          projectId=1,
                          id=0,
@@ -48,7 +51,14 @@ def test_post_review(mocker):
         'projectId': 1
     }
 
-    response = client.post("/reviews", json=body)
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.post("/reviews", json=body)
+
     print(response.text)
     assert response.status_code == 201
     assert response.json() == review_response_mock
+
+    #response = client.post("/reviews", json=body)
+    #print(response.text)
+    #assert response.status_code == 201
+    #assert response.json() == review_response_mock
