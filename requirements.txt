@@ -4,6 +4,7 @@ pytest
 httpx
 python-dotenv
 pydantic
+requests
 coverage
 pytest-asyncio
 pytest_httpx
