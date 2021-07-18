@@ -1,3 +1,6 @@
+install:
+	pip3 install -r requirements.txt
+
 run:
 	docker-compose up --build
 
