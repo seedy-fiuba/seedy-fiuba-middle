@@ -43,8 +43,11 @@ async def test_post_review(mocker):
                            createdAt='',
                            updatedAt='')
 
+    async def mock_request_review():
+        return review_response_mock
+
     review_response_mock = ReviewResponseModel(project=project_mock, review=review_mock)
-    mocker.patch('src.controller.review_controller.request_review', return_value=review_response_mock)
+    mocker.patch('src.controller.review_controller.request_review', return_value=await mock_request_review())
 
     body = {
         'reviewerId': 0,
@@ -54,7 +57,6 @@ async def test_post_review(mocker):
     async with AsyncClient(app=app, base_url="http://test") as ac:
         response = await ac.post("/reviews", json=body)
 
-    print(response.text)
     assert response.status_code == 201
     assert response.json() == review_response_mock
 
