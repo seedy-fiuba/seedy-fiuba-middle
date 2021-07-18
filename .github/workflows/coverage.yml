@@ -1,4 +1,4 @@
-name: Upload Python Package
+name: Coverage
 
 on:
   push:
@@ -25,6 +25,7 @@ jobs:
         
     - name: Run tests
       run: coverage run -m pytest
+      timeout-minutes: 5
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
