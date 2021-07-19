@@ -23,7 +23,7 @@ project_json = {
     'title': 'title',
     'description': 'description',
     'category': 'category',
-    'status': 'created',
+    'status': 'pending-reviewer',
     'fundedAmount': 0.0,
     'location': None,
     'ownerId': 3,
@@ -66,4 +66,27 @@ async def test_post_review(httpx_mock: HTTPXMock):
 
     print(response.text)
     assert response.status_code == 201
+    assert response.json() == {'project': project_json, 'review': review_json}
+
+
+@pytest.mark.asyncio
+async def test_reject_review(httpx_mock: HTTPXMock):
+    body = {
+        'status': 'rejected'
+    }
+    review_json['status'] = 'rejected'
+    project_json['status'] = 'created'
+
+    httpx_mock.add_response(method="PUT", url='https://seedy-fiuba-users-api.herokuapp.com/reviews/0',
+                            json=review_json,
+                            match_content=b'{"status": "rejected"}')
+    httpx_mock.add_response(method="PUT", url='https://seedy-fiuba-projects-api.herokuapp.com/api/project/1',
+                            json=project_json,
+                            match_content=b'{"status": "created"}')
+
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.put("/reviews/0", json=body)
+
+    print(response.text)
+    assert response.status_code == 200
     assert response.json() == {'project': project_json, 'review': review_json}
