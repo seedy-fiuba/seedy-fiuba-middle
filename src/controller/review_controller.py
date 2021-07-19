@@ -65,7 +65,6 @@ async def update_review(reviewId: int, payload: ReviewUpdatePayload):
     else:
         project_update_payload = UpdateProjectPayload(
             status=PROJECT_STATUS_FOR_REVIEW_STATUS[payload.status],
-            reviewerId=review.reviewerId
         )
 
     # Update project status
