@@ -55,9 +55,11 @@ async def test_post_review(httpx_mock: HTTPXMock):
         'projectId': 1
     }
 
-    httpx_mock.add_response(method="POST", url='https://seedy-fiuba-users-api.herokuapp.com/reviews', json=review_json)
+    httpx_mock.add_response(method="POST", url='https://seedy-fiuba-users-api.herokuapp.com/reviews', json=review_json,
+                            match_content=b'{"reviewerId": 0, "projectId": 1}')
     httpx_mock.add_response(method="PUT", url='https://seedy-fiuba-projects-api.herokuapp.com/api/project/1',
-                            json=project_json)
+                            json=project_json,
+                            match_content=b'{"status": "pending-reviewer"}')
 
     async with AsyncClient(app=app, base_url="http://test") as ac:
         response = await ac.post("/reviews", json=body)
