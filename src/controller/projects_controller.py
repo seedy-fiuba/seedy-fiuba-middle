@@ -21,8 +21,8 @@ async def fund_project(project_id: int, payload: FundProjectPayload):
     if project.walletId is None:
         raise MiddleException(status=400, detail={'error': 'Project does not have a wallet', 'status': 400})
 
-    if project.status != Status.IN_PROGRESS:
-        raise MiddleException(status=400, detail={'error': 'Project is in progress, already funded', 'status': 400})
+    if project.status != Status.FUNDING:
+        raise MiddleException(status=400, detail={'error': 'Project is not in  funding status', 'status': 400})
 
     # Fund in Smart Contract
     fund = await sc_client.fund_project(project.walletId,
@@ -45,6 +45,8 @@ async def fund_project(project_id: int, payload: FundProjectPayload):
                                              status=PROJECT_STATUS_FOR_SC_STATUS[fund.projectStatus],
                                              missingAmount=fund.missingAmount
                                          ))
+
+    return ''
 
 
 async def accept_stage(project_id: int, stage_id: int, payload: AcceptStagePayload):
@@ -82,6 +84,8 @@ async def accept_stage(project_id: int, stage_id: int, payload: AcceptStagePaylo
                                          )
 
     await projects_client.update_project(project_id, update_project_payload)
+
+    return ''
 
 
 async def request_stage_review(project_id: int):
