@@ -22,7 +22,7 @@ async def transfer_funds(user_id: int, payload: TransferFundsPayload):
     if user.walletPrivateKey is None:
         raise MiddleException(status=400, detail={'error': 'User does not have a wallet', 'status': 400})
 
-    # Get wallet balance from smart contract
+    # Transfer funds in smart contract
     await sc_client.transfer_funds(TransferSCFunds(destinationAddress=payload.destinationAddress,
                                                           amount=payload.amount,
                                                          sourcePrivateKey=user.walletPrivateKey))

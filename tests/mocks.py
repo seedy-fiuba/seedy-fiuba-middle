@@ -82,6 +82,9 @@ accept_stage_response_template = {
     'projectStatus': 'IN_PROGRESS'
 }
 
+balance_template = {
+    'balance': 0.1
+}
 
 # PROJECTS
 def mock_get_project(httpx_mock: HTTPXMock, project_id: int, response: dict):
@@ -122,4 +125,16 @@ def mock_sc_accept_stage(httpx_mock: HTTPXMock, project_wallet_id: int, body: di
     httpx_mock.add_response(method="PUT",
                             url=sc_base_url() + f'/projects/{project_wallet_id}',
                             json=response,
+                            match_content=str.encode(json.dumps(body)))
+
+
+def mock_sc_get_balance(httpx_mock: HTTPXMock, user_private_key: str, response: dict):
+    httpx_mock.add_response(method="GET",
+                            url=sc_base_url() + f'/wallet/{user_private_key}',
+                            json=response)
+
+
+def mock_sc_transfer_funds(httpx_mock: HTTPXMock, body: dict):
+    httpx_mock.add_response(method="POST",
+                            url=sc_base_url() + f'/transfer/funds',
                             match_content=str.encode(json.dumps(body)))
