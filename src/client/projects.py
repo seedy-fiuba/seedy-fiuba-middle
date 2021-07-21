@@ -5,8 +5,16 @@ from ..exceptions import MiddleException
 from ..responses import ProjectPaginatedResponse
 from .payloads.projects import UpdateProjectPayload, FundProjectClientPayload
 from pydantic import parse_obj_as
+from typing import List
 
 CLIENT_TIMEOUT = 60.0
+
+
+async def get_projects(x_auth_token: str):
+    url = f'{base_url()}/api/project'
+
+    resp = await fetch(url, x_auth_token)
+    return parse_obj_as(List[Project], resp)
 
 
 async def get_project(projectId: int):
@@ -70,6 +78,18 @@ async def fund_project(projectId: int, data: FundProjectClientPayload):
         #data = parse_obj_as(Project, resp.json())
 
     #return data
+
+
+async def fetch(url: str, x_auth_token: str):
+    async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
+        h = {'X-Auth-Token': x_auth_token}
+        resp: httpx.Response = await client.get(url, headers=h)
+
+        if resp.status_code >= 400:
+            print(f"GET {url} failed: {resp.text}")
+            raise MiddleException(status=resp.status_code, detail=parse_error(resp))
+
+        return resp.json()
 
 
 def base_url():

@@ -8,6 +8,10 @@ from ..utils.map_status import PROJECT_STATUS_FOR_SC_STATUS
 from ..models.projects import Status
 
 
+async def get_projects(x_auth_token):
+    return await projects_client.get_projects(x_auth_token)
+
+
 async def fund_project(project_id: int, payload: FundProjectPayload):
     # Get funder private key
     funder = await users_client.get_user(payload.funderId)
