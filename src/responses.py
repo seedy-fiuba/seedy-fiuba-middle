@@ -34,6 +34,6 @@ class ContractResponseModel(BaseModel):
 
 class ContractProjectSearchResponse(BaseModel):
     totalItems: int
-    results: List[ContractResponseModel] = []
+    results: List[ContractResponseModel]
     totalPages: int
     currentPage: int
