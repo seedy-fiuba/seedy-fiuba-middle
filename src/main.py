@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request, Depends
 from src.router import projects as projects_router, reviews as reviews_router, \
-    wallet as wallet_router, users as users_router
+    wallet as wallet_router, users as users_router, contracts as contracts_router
 from dotenv import load_dotenv
 from src import exceptions
 from fastapi.responses import JSONResponse
@@ -23,6 +23,7 @@ app.include_router(projects_router.router)
 app.include_router(users_router.router)
 app.include_router(reviews_router.router)
 app.include_router(wallet_router.router)
+app.include_router(contracts_router.router)
 
 
 @app.get('/')

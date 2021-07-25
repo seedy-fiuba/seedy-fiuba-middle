@@ -43,3 +43,10 @@ class Project(BaseModel):
     updatedAt: str = None
 
 
+class Contract(BaseModel):
+    projectId: int = None
+    funderId: int = None
+    currentFundedAmount: float = None
+    txHash: str = None
+    createdAt: str = None
+    updatedAt: str = None

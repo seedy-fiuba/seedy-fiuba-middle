@@ -10,19 +10,30 @@ class ReviewResponseModel(BaseModel):
 
 class ReviewPaginatedResponse(BaseModel):
     size: int
-    results: List[users.Review]
+    results: List[users.Review] = []
 
 
 class ProjectPaginatedResponse(BaseModel):
     size: int
-    results: List[projects.Project]
+    results: List[projects.Project] = []
 
 
 class ReviewProjectSearchResponse(BaseModel):
     size: int
-    results: List[ReviewResponseModel]
+    results: List[ReviewResponseModel] = []
 
 
 class WalletBalanceResponse(BaseModel):
     balance: float
 
+
+class ContractResponseModel(BaseModel):
+    project: projects.Project = None
+    contract: projects.Contract
+
+
+class ContractProjectSearchResponse(BaseModel):
+    totalItems: int
+    results: List[ContractResponseModel] = []
+    totalPages: int
+    currentPage: int

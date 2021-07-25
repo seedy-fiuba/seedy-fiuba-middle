@@ -3,6 +3,7 @@ import os
 from ..models.projects import Project
 from ..exceptions import MiddleException
 from ..responses import ProjectPaginatedResponse
+from .responses import projects as projects_responses
 from .payloads.projects import UpdateProjectPayload, FundProjectClientPayload
 from pydantic import parse_obj_as
 from typing import List
@@ -78,6 +79,20 @@ async def fund_project(projectId: int, data: FundProjectClientPayload):
         #data = parse_obj_as(Project, resp.json())
 
     #return data
+
+
+async def search_contracts(params):
+    url = f'{base_url()}/api/contracts'
+
+    async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
+        h = {'X-override-token': 'true'}
+        resp: httpx.Response = await client.get(url, params=params, headers=h)
+        if resp.status_code >= 400:
+            print(f"Search contracts failed with status {resp.status_code}: {resp.text}")
+            raise MiddleException(status= resp.status_code, detail=parse_error(resp))
+        data = parse_obj_as(projects_responses.ContractPaginatedResponse, resp.json())
+
+    return data
 
 
 async def fetch(url: str, x_auth_token: str):
