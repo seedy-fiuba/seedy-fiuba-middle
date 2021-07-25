@@ -102,3 +102,41 @@ async def test_approve_review(httpx_mock: HTTPXMock):
     print(response.text)
     assert response.status_code == 200
     assert response.json() == {'project': project_json, 'review': review_json}
+
+
+@pytest.mark.asyncio
+async def test_get_reviews(httpx_mock: HTTPXMock):
+    review_response_mock = {
+        'size': 1,
+        'results': [
+            review_json
+        ]
+    }
+
+    project_response_mock = {
+        'size': 1,
+        'results': [
+            project_json
+        ]
+    }
+    httpx_mock.add_response(method="GET",
+                            url="https://seedy-fiuba-users-api.herokuapp.com/reviews",
+                            json=review_response_mock)
+    httpx_mock.add_response(method="GET",
+                            url="https://seedy-fiuba-projects-api.herokuapp.com/api/project/search?id=1",
+                            json=project_response_mock)
+
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.get("/reviews")
+
+    print(response.text)
+    assert response.status_code == 200
+    assert response.json() == {
+        'size': 1,
+        'results': [
+            {
+                'project': project_json,
+                'review': review_json
+            }
+        ]
+    }

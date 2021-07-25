@@ -86,6 +86,15 @@ balance_template = {
     'balance': 0.1
 }
 
+contract_template = {
+    "projectId": 1,
+    "funderId": 32,
+    "currentFundedAmount": 0.000001,
+    "txHash": "0x1aa945a5f47b16ae76539af4df3497c9aedf04c34408fd6055b0d4ff78102854",
+    "createdAt": "2021-07-08T21:14:53.934Z",
+    "updatedAt": "2021-07-08T21:14:53.934Z"
+}
+
 # PROJECTS
 def mock_get_project(httpx_mock: HTTPXMock, project_id: int, response: dict):
     httpx_mock.add_response(method="GET",
