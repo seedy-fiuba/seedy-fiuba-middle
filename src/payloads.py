@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from .models.users import ReviewStatus
+from typing import Optional
 
 
 # Reviews
@@ -27,3 +28,12 @@ class TransferFundsPayload(BaseModel):
     amount: float
 
 
+# Servers
+class ServerCreatePayload(BaseModel):
+    name: str
+    url: str
+    description: str
+
+
+class ServerUpdatePayload(BaseModel):
+    url: str

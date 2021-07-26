@@ -8,3 +8,5 @@ requests
 coverage
 pytest-asyncio
 pytest_httpx
+pymongo
+dnspython
