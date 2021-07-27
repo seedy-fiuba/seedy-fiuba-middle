@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from src.router import projects as projects_router, reviews as reviews_router, \
     wallet as wallet_router, users as users_router, contracts as contracts_router, \
     servers as servers_router
@@ -11,6 +12,13 @@ load_dotenv()  # take environment variables from .env.
 
 app = FastAPI(dependencies=[Depends(get_token_header)])
 print("app is up!")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
 
 @app.exception_handler(exceptions.MiddleException)
