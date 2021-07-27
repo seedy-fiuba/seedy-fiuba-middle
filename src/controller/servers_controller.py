@@ -34,6 +34,14 @@ async def get_servers():
     return servers
 
 
+async def get_server(server_id: int):
+    server = db.ServerRepository().find({'_id': server_id})
+    if server is None:
+        raise MiddleException(status=404,
+                              detail={'error': 'Server not found'})
+    return server
+
+
 async def update_server(server_id: int, payload: ServerUpdatePayload):
     await validate_url(payload.url)
     server = db.ServerRepository().update_by_id(server_id, {'$set': {'url': payload.url}})

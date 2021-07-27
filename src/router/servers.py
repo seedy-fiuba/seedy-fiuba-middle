@@ -21,6 +21,11 @@ async def get_servers():
     return await servers_controller.get_servers()
 
 
+@router.get('/{user_id}', response_model=Server)
+async def get_server(user_id: int):
+    return await servers_controller.get_server(user_id)
+
+
 @router.put('/{server_id}', response_model=Server)
 async def update_server(server_id: int, payload: ServerUpdatePayload):
     return await servers_controller.update_server(server_id, payload)
