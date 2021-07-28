@@ -11,12 +11,12 @@ router = APIRouter(
 )
 
 
-@router.post('/', response_model=Server, status_code=HTTPStatus.HTTP_201_CREATED)
+@router.post('', response_model=Server, status_code=HTTPStatus.HTTP_201_CREATED)
 async def create_server(payload: ServerCreatePayload):
     return await servers_controller.create_server(payload)
 
 
-@router.get('/', response_model=List[Server])
+@router.get('', response_model=List[Server])
 async def get_servers():
     return await servers_controller.get_servers()
 

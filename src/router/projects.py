@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 
-@router.get('/', response_model=List[Project])
+@router.get('', response_model=List[Project])
 async def get_projects(x_auth_token: str = Depends(get_token_header)):
     return await projects_controller.get_projects(x_auth_token)
 

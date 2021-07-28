@@ -10,6 +10,6 @@ router = APIRouter(
 )
 
 
-@router.get('/', response_model=ContractProjectSearchResponse)
+@router.get('', response_model=ContractProjectSearchResponse)
 async def get_contracts(funderId: Optional[str] = None, size: Optional[str] = None, page: Optional[str] = None):
     return await contracts_controller.get_contracts(funderId, size, page)
