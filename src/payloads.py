@@ -62,7 +62,8 @@ class CreateUserPayload(BaseModel):
 
 class UpdateUserPayload(BaseModel):
     description: str = None
-    status: str  = None
+    status: str = None
+    firebaseToken: str = None
 
 
 # Servers

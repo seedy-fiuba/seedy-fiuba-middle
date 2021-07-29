@@ -77,6 +77,8 @@ async def transfer_funds(payload: TransferSCFunds):
 
 
 def base_url():
+    if os.environ['ENV'] != 'dev':
+        return os.environ['SMART_CONTRACT_BASE_URL']
     return db.ServerRepository().find({'name': os.environ['SMART_CONTRACT_URL_KEY']})['url']
 
 

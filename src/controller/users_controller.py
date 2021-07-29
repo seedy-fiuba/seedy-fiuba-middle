@@ -20,3 +20,4 @@ async def get_user_by_id(user_id: int):
 
 async def update_user(user_id: int, payload: UpdateUserPayload):
     return await users_client.update_user(user_id, payload)
+

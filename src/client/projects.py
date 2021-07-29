@@ -104,6 +104,8 @@ def parse_obj_to_dict(obj):
 
 
 def base_url():
+    if os.environ['ENV'] != 'dev':
+        return os.environ['PROJECTS_BASE_URL']
     return db.ServerRepository().find({'name': os.environ['PROJECTS_URL_KEY']})['url']
 
 
