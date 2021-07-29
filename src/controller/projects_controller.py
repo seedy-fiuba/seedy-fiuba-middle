@@ -12,6 +12,14 @@ async def get_projects():
     return await projects_client.get_projects()
 
 
+async def search_projects(params: dict):
+    for key, value in dict(params).items():
+        if value is None:
+            del params[key]
+
+    return await projects_client.search_projects(params)
+
+
 async def fund_project(project_id: int, payload: FundProjectPayload):
     # Get funder private key
     funder = await users_client.get_user(payload.funderId)

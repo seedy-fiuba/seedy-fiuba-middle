@@ -19,7 +19,7 @@ async def get_contracts(funder_id: str, size: str, page: str):
 
     if contracts.totalItems > 0:
         projects_ids = list(map(lambda c: str(c.projectId), contracts.contracts))
-        projects_results = await projects_client.search_project({'id': ','.join(projects_ids)})
+        projects_results = await projects_client.search_projects({'id': ','.join(projects_ids)})
 
         for contract in contracts.contracts:
             project = list(filter(lambda p: p.id == contract.projectId, projects_results.results))

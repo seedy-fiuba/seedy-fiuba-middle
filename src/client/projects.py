@@ -50,7 +50,7 @@ async def update_project(projectId: int, data: UpdateProjectPayload):
     return data
 
 
-async def search_project(params):
+async def search_projects(params):
     url = f'{base_url()}/api/project/search'
 
     async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:

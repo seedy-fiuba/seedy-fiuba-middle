@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from fastapi.responses import PlainTextResponse
 from ..controller import projects_controller
 from ..payloads import FundProjectPayload, AcceptStagePayload
-from ..dependencies import get_token_header
+from ..responses import ProjectPaginatedResponse
 from typing import List
 from ..models.projects import Project
+from typing import Optional
 
 
 router = APIRouter(
@@ -18,10 +19,25 @@ async def get_projects():
     return await projects_controller.get_projects()
 
 
-# @router.get('/search')
-# async def search_projects(): # TODO add params
-#     return await projects_controller.search_projects()
-#
+@router.get('/search', response_model=ProjectPaginatedResponse)
+async def search_projects(status: Optional[str] = None,
+                          category: Optional[str] = None,
+                          locationX: Optional[str] = None,
+                          locationY: Optional[str] = None,
+                          ownerId: Optional[str] = None,
+                          hashtags: Optional[str] = None,
+                          id: Optional[str] = None):
+    params = {
+        'status': status,
+        'category': category,
+        'locationX': locationX,
+        'locationY': locationY,
+        'ownerId': ownerId,
+        'hashtags': hashtags,
+        'id': id
+    }
+    return await projects_controller.search_projects(params)
+
 #
 # @router.get('/{project_id}')
 # async def get_project_by_id(project_id: int):
