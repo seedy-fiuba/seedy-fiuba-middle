@@ -1,6 +1,7 @@
-from fastapi import APIRouter, status as HTTPStatus
+from fastapi import APIRouter, status as HTTPStatus, Depends
 from fastapi.responses import PlainTextResponse
 from ..controller import projects_controller
+from ..dependencies import get_token_header
 from ..payloads import FundProjectPayload, AcceptStagePayload, \
     CreateProjectPayload
 from ..client.payloads.projects import UpdateProjectPayload
@@ -12,7 +13,8 @@ from typing import Optional
 
 router = APIRouter(
     prefix="/projects",
-    tags=["projects"]
+    tags=["projects"],
+    dependencies=[Depends(get_token_header)]
 )
 
 

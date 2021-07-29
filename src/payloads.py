@@ -74,3 +74,18 @@ class ServerCreatePayload(BaseModel):
 
 class ServerUpdatePayload(BaseModel):
     url: str
+
+
+# Auth
+class LoginPayload(BaseModel):
+    email: str
+    password: str
+
+
+class GoogleLoginPayload(BaseModel):
+    idToken: str
+
+
+class AuthenticatePayload(BaseModel):
+    authToken: str
+

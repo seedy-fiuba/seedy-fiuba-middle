@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends
 from src.responses import ContractProjectSearchResponse
 from ..controller import contracts_controller
+from ..dependencies import get_token_header
 from typing import Optional
 
 
 router = APIRouter(
     prefix="/contracts",
-    tags=["contracts"]
+    tags=["contracts"],
+    dependencies=[Depends(get_token_header)]
 )
 
 

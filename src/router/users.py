@@ -1,4 +1,6 @@
-from fastapi import APIRouter, status as HTTPStatus
+from fastapi import APIRouter, status as HTTPStatus, Depends
+
+from ..dependencies import get_token_header
 from ..models.users import User
 from ..payloads import CreateUserPayload, UpdateUserPayload
 from ..responses import UsersPaginatedResponse
@@ -7,7 +9,8 @@ from typing import Optional
 
 router = APIRouter(
     prefix="/users",
-    tags=["users"]
+    tags=["users"],
+    dependencies=[Depends(get_token_header)]
 )
 
 

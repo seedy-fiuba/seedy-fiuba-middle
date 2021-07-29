@@ -1,12 +1,15 @@
-from fastapi import APIRouter, status as HTTPStatus
+from fastapi import APIRouter, status as HTTPStatus, Depends
 from ..controller import review_controller
 from src.responses import ReviewResponseModel, ReviewProjectSearchResponse
 from src.payloads import ReviewRequestPayload, ReviewUpdatePayload
 from typing import Optional
 
+from ..dependencies import get_token_header
+
 router = APIRouter(
     prefix="/reviews",
-    tags=["reviews"]
+    tags=["reviews"],
+    dependencies=[Depends(get_token_header)]
 )
 
 

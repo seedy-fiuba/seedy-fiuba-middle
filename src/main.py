@@ -1,16 +1,15 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from src.router import projects as projects_router, reviews as reviews_router, \
     wallet as wallet_router, users as users_router, contracts as contracts_router, \
-    servers as servers_router
+    servers as servers_router, auth as auth_router
 from dotenv import load_dotenv
 from src import exceptions
 from fastapi.responses import JSONResponse
-from src.dependencies import get_token_header
 
 load_dotenv()  # take environment variables from .env.
 
-app = FastAPI(dependencies=[Depends(get_token_header)])
+app = FastAPI()
 print("app is up!")
 
 app.add_middleware(
@@ -30,6 +29,7 @@ async def unicorn_exception_handler(request: Request, exc: exceptions.MiddleExce
 
 app.include_router(projects_router.router)
 app.include_router(users_router.router)
+app.include_router(auth_router.router)
 app.include_router(reviews_router.router)
 app.include_router(wallet_router.router)
 app.include_router(contracts_router.router)

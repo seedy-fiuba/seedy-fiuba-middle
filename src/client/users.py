@@ -2,8 +2,8 @@ import httpx
 import os
 from ..models.users import ReviewStatus, Review, User
 from ..exceptions import MiddleException
-from ..responses import ReviewPaginatedResponse, UsersPaginatedResponse
-from ..payloads import ReviewRequestPayload, CreateUserPayload, UpdateUserPayload
+from ..responses import ReviewPaginatedResponse, UsersPaginatedResponse, LoginResponse, AuthenticateResponse
+from ..payloads import ReviewRequestPayload, CreateUserPayload, UpdateUserPayload, LoginPayload, GoogleLoginPayload
 from ..repository import servers_repository as db
 from pydantic import parse_obj_as
 
@@ -69,7 +69,20 @@ async def authenticate(token: str):
     body = {
         'authToken': token
     }
-    await post(url, body)
+    resp = await post(url, body)
+    return parse_obj_as(AuthenticateResponse, resp)
+
+
+async def login(data: LoginPayload):
+    url = f'{base_url()}/auth/login'
+    resp = await post(url, vars(data))
+    return parse_obj_as(LoginResponse, resp)
+
+
+async def google_login(data: GoogleLoginPayload):
+    url = f'{base_url()}/auth/google_login'
+    resp = await post(url, vars(data))
+    return parse_obj_as(LoginResponse, resp)
 
 
 async def fetch(url: str, params: dict = None):

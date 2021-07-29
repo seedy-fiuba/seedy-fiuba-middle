@@ -1,4 +1,6 @@
-from fastapi import APIRouter, status as HTTPStatus
+from fastapi import APIRouter, status as HTTPStatus, Depends
+
+from ..dependencies import get_token_header
 from ..payloads import ServerCreatePayload, ServerUpdatePayload
 from ..controller import servers_controller
 from ..models.servers import Server
@@ -7,7 +9,8 @@ from typing import List
 
 router = APIRouter(
     prefix="/servers",
-    tags=["servers"]
+    tags=["servers"],
+    dependencies=[Depends(get_token_header)]
 )
 
 

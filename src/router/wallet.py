@@ -1,12 +1,14 @@
-from fastapi import APIRouter, status as HTTPStatus
+from fastapi import APIRouter, status as HTTPStatus, Depends
 from ..controller import wallet_controller
+from ..dependencies import get_token_header
 from ..responses import WalletBalanceResponse
 from ..payloads import TransferFundsPayload
 from fastapi.responses import PlainTextResponse
 
 router = APIRouter(
     prefix="/wallet",
-    tags=["wallet"]
+    tags=["wallet"],
+    dependencies=[Depends(get_token_header)]
 )
 
 
