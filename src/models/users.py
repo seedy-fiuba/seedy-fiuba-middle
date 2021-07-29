@@ -24,12 +24,15 @@ class Role(str, Enum):
 
 
 class User(BaseModel):
-    name: str
-    lastName: str
-    email: str
-    role: Role
+    id: int = None
+    name: str = None
+    lastName: str = None
+    email: str = None
+    role: Role = None
     walletAddress: str = None
     walletPrivateKey: str = None
-    createdAt: str
-    updatedAt: str
+    createdAt: str = None
+    updatedAt: str = None
+    firebaseToken: str = None
+    description: str = None
 

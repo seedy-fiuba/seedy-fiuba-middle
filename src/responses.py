@@ -37,3 +37,11 @@ class ContractProjectSearchResponse(BaseModel):
     results: List[ContractResponseModel]
     totalPages: int
     currentPage: int
+
+
+class UsersPaginatedResponse(BaseModel):
+    totalItems: int
+    users: List[users.User]
+    totalPages: int
+    currentPage: int
+

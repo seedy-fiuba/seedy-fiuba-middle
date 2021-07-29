@@ -51,6 +51,20 @@ class CreateProjectPayload(BaseModel):
     finishDate: str
 
 
+# Users
+class CreateUserPayload(BaseModel):
+    name: str
+    lastName: str
+    email: str
+    password: str
+    role: str
+
+
+class UpdateUserPayload(BaseModel):
+    description: str = None
+    status: str  = None
+
+
 # Servers
 class ServerCreatePayload(BaseModel):
     name: str

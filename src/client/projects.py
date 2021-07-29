@@ -6,7 +6,8 @@ from ..responses import ProjectPaginatedResponse
 from ..payloads import CreateProjectPayload
 from .responses import projects as projects_responses
 from .payloads.projects import UpdateProjectPayload, FundProjectClientPayload
-from pydantic import parse_obj_as, BaseModel
+from ..repository import servers_repository as db
+from pydantic import parse_obj_as
 from typing import List
 
 CLIENT_TIMEOUT = 60.0
@@ -103,7 +104,7 @@ def parse_obj_to_dict(obj):
 
 
 def base_url():
-    return os.environ['PROJECTS_BASE_URL']
+    return db.ServerRepository().find({'name': os.environ['PROJECTS_URL_KEY']})['url']
 
 
 def parse_error(resp):
