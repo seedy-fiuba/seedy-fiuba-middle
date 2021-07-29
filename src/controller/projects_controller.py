@@ -20,6 +20,10 @@ async def search_projects(params: dict):
     return await projects_client.search_projects(params)
 
 
+async def get_project_by_id(id: int):
+    return await projects_client.get_project(id)
+
+
 async def fund_project(project_id: int, payload: FundProjectPayload):
     # Get funder private key
     funder = await users_client.get_user(payload.funderId)

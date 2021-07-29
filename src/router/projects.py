@@ -38,11 +38,11 @@ async def search_projects(status: Optional[str] = None,
     }
     return await projects_controller.search_projects(params)
 
-#
-# @router.get('/{project_id}')
-# async def get_project_by_id(project_id: int):
-#     return await projects_controller.get_project_by_id(project_id)
-#
+
+@router.get('/{project_id}', response_model=Project)
+async def get_project_by_id(project_id: int):
+    return await projects_controller.get_project_by_id(project_id)
+
 #
 # @router.post('/')
 # async def create_project(): # TODO add payload
