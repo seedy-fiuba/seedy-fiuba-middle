@@ -16,6 +16,34 @@ def non_mocked_hosts() -> list:
 
 
 @pytest.mark.asyncio
+async def test_get_project(httpx_mock: HTTPXMock):
+    mock_get_project(httpx_mock, project_json['id'], project_json)
+
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.get(f"/projects/{project_json['id']}")
+
+    print('response: ' + response.text)
+    assert response.status_code == 200
+    assert response.json() == project_json
+
+
+@pytest.mark.asyncio
+async def test_put_project(httpx_mock: HTTPXMock):
+    body = {
+                'status': 'funding',
+                'missingAmount': fund_project_response['missingAmount']
+            }
+    mock_update_project(httpx_mock, project_json['id'], body, project_json)
+
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.put(f"/projects/{project_json['id']}", json=body)
+
+    print('response: ' + response.text)
+    assert response.status_code == 200
+    assert response.json() == project_json
+
+
+@pytest.mark.asyncio
 async def test_fund_project(httpx_mock: HTTPXMock):
     body = {
         'funderId': 5,
