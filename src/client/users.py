@@ -64,6 +64,22 @@ async def get_user(id: int):
 
     return data
 
+
+# AUTH
+async def authenticate(token: str):
+    url = f'{base_url()}/auth/authenticate'
+
+    body = {
+        'authToken': token
+    }
+
+    async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
+        resp: httpx.Response = await client.post(url, json=body)
+        if resp.status_code >= 400:
+            print("Update user review failed: " + resp.text)
+            raise MiddleException(status=resp.status_code, detail=parse_error(resp))
+
+
 def base_url():
     return os.environ['USERS_BASE_URL']
 

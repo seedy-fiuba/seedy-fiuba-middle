@@ -11,10 +11,10 @@ from typing import List
 CLIENT_TIMEOUT = 60.0
 
 
-async def get_projects(x_auth_token: str):
+async def get_projects():
     url = f'{base_url()}/api/project'
 
-    resp = await fetch(url, x_auth_token)
+    resp = await fetch(url)
     return parse_obj_as(List[Project], resp)
 
 
@@ -95,9 +95,9 @@ async def search_contracts(params):
     return data
 
 
-async def fetch(url: str, x_auth_token: str):
+async def fetch(url: str):
     async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
-        h = {'X-Auth-Token': x_auth_token}
+        h = {'X-override-token': 'true'}
         resp: httpx.Response = await client.get(url, headers=h)
 
         if resp.status_code >= 400:
