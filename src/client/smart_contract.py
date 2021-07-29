@@ -4,6 +4,7 @@ from .payloads.smart_contract import CreateSCProject, FundSCProject, AcceptSCPro
 from .responses.smart_contract import CreateProjectResponse, FundProjectResponse, AcceptStageResponse
 from ..responses import WalletBalanceResponse
 from ..exceptions import MiddleException
+from ..repository import servers_repository as db
 from pydantic import parse_obj_as
 
 CLIENT_TIMEOUT = 300.0
@@ -76,7 +77,9 @@ async def transfer_funds(payload: TransferSCFunds):
 
 
 def base_url():
-    return os.environ['SMART_CONTRACT_BASE_URL']
+    if os.environ['ENV'] == 'dev':
+        return os.environ['SMART_CONTRACT_BASE_URL']
+    return db.ServerRepository().find({'name': os.environ['SMART_CONTRACT_URL_KEY']})['url']
 
 
 def parse_error(resp):

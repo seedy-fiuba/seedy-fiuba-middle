@@ -1,79 +1,117 @@
+from json import JSONDecodeError
+
 import httpx
 import os
 from ..models.projects import Project
 from ..exceptions import MiddleException
 from ..responses import ProjectPaginatedResponse
+from ..payloads import CreateProjectPayload
+from .responses import projects as projects_responses
 from .payloads.projects import UpdateProjectPayload, FundProjectClientPayload
+from ..repository import servers_repository as db
 from pydantic import parse_obj_as
+from typing import List
 
 CLIENT_TIMEOUT = 60.0
 
 
-async def get_project(projectId: int):
-    url = f'{base_url()}/api/project/{projectId}'
+async def get_projects():
+    url = f'{base_url()}/api/project'
 
-    async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
-        h = {'X-override-token': 'true'}
-        resp: httpx.Response = await client.get(url, headers=h)
-
-        if resp.status_code >= 400:
-            print("Get project failed: " + resp.text)
-            raise MiddleException(status=resp.status_code, detail=parse_error(resp))
-
-        data = parse_obj_as(Project, resp.json())
-
-    return data
+    resp = await fetch(url)
+    return parse_obj_as(List[Project], resp)
 
 
-async def update_project(projectId: int, data: UpdateProjectPayload):
-    url = f'{base_url()}/api/project/{projectId}'
+async def get_project(project_id: int):
+    url = f'{base_url()}/api/project/{project_id}'
 
-    async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
-        h = {'X-override-token': 'true'}
-        resp: httpx.Response = await client.put(url, json={k: v for k, v in vars(data).items() if v is not None}, headers=h)
-
-        if resp.status_code >= 400:
-            print("Update project failed: " + resp.text)
-            raise MiddleException(status=resp.status_code, detail=parse_error(resp))
-
-        data = parse_obj_as(Project, resp.json())
-
-    return data
+    resp = await fetch(url)
+    return parse_obj_as(Project, resp)
 
 
-async def search_project(params):
+async def create_project(data: CreateProjectPayload):
+    url = f'{base_url()}/api/project'
+
+    resp = await post(url, data.dict())
+    return parse_obj_as(Project, resp)
+
+
+async def update_project(project_id: int, data: UpdateProjectPayload):
+    url = f'{base_url()}/api/project/{project_id}'
+
+    resp = await put(url, parse_obj_to_dict(data))
+    return parse_obj_as(Project, resp)
+
+
+async def search_projects(params):
     url = f'{base_url()}/api/project/search'
 
+    resp = await fetch(url, params)
+    return parse_obj_as(ProjectPaginatedResponse, resp)
+
+
+async def fund_project(project_id: int, data: FundProjectClientPayload):
+    url = f'{base_url()}/api/project/{project_id}/fund'
+    await post(url, parse_obj_to_dict(data))
+
+
+async def search_contracts(params):
+    url = f'{base_url()}/api/contracts'
+
+    resp = await fetch(url, params)
+    return parse_obj_as(projects_responses.ContractPaginatedResponse, resp)
+
+
+async def fetch(url: str, params: dict = None):
     async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
         h = {'X-override-token': 'true'}
-        resp: httpx.Response = await client.get(url, headers=h,  params=params)
+        if params is not None:
+            resp: httpx.Response = await client.get(url, headers=h, params=params)
+        else:
+            resp: httpx.Response = await client.get(url, headers=h)
+
         if resp.status_code >= 400:
-            print("Search projects failed: " + resp.text)
+            print(f"GET {url} failed: {resp.text}")
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
-        data = parse_obj_as(ProjectPaginatedResponse, resp.json())
 
-    return data
+        return resp.json()
 
 
-async def fund_project(projectId: int, data: FundProjectClientPayload):
-    url = f'{base_url()}/api/project/{projectId}/fund'
-
+async def post(url: str, data):
     async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
         h = {'X-override-token': 'true'}
-        resp: httpx.Response = await client.post(url, json={k: v for k, v in vars(data).items() if v is not None},
-                                                headers=h)
+        resp: httpx.Response = await client.post(url, json=data, headers=h)
 
         if resp.status_code >= 400:
-            print("Fund project in projects api failed: " + resp.text)
+            print(f"POST {url} failed: " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
 
-        #data = parse_obj_as(Project, resp.json())
+    try:
+        return resp.json()
+    except JSONDecodeError as e:
+        return {}
 
-    #return data
+
+async def put(url: str, data: dict):
+    async with httpx.AsyncClient(timeout=CLIENT_TIMEOUT) as client:
+        h = {'X-override-token': 'true'}
+        resp: httpx.Response = await client.put(url, json=data, headers=h)
+
+        if resp.status_code >= 400:
+            print(f"PUT {url} failed: " + resp.text)
+            raise MiddleException(status=resp.status_code, detail=parse_error(resp))
+
+    return resp.json()
+
+
+def parse_obj_to_dict(obj):
+    return {k: v for k, v in vars(obj).items() if v is not None}
 
 
 def base_url():
-    return os.environ['PROJECTS_BASE_URL']
+    if os.environ['ENV'] == 'dev':
+        return os.environ['PROJECTS_BASE_URL']
+    return db.ServerRepository().find({'name': os.environ['PROJECTS_URL_KEY']})['url']
 
 
 def parse_error(resp):

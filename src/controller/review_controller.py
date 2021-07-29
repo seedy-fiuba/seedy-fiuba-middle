@@ -91,7 +91,7 @@ async def get_reviews(reviewer_id: str, status: str):
         return ReviewProjectSearchResponse(size=reviews.size, results=[])
 
     projects_ids = list(map(lambda r: str(r.projectId), reviews.results))
-    projects_results = await projects_client.search_project({'id': ",".join(projects_ids)})
+    projects_results = await projects_client.search_projects({'id': ",".join(projects_ids)})
 
     search_results = []
 

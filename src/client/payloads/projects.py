@@ -3,6 +3,9 @@ from ...models.projects import Status
 
 
 class UpdateProjectPayload(BaseModel):
+    title: str = None
+    category: str = None
+    description: str = None
     status: Status = None
     currentStageId: int = None
     walletId: int = None
