@@ -57,7 +57,7 @@ async def test_fund_project(httpx_mock: HTTPXMock):
     async with AsyncClient(app=app, base_url="http://test") as ac:
         response = await ac.post(f"/projects/{project_json['id']}/fund", json=body)
 
-    print(response.text)
+    print('response: ' + response.text)
     assert response.status_code == 200
     assert response.text == ''
 

@@ -1,3 +1,5 @@
+from json import JSONDecodeError
+
 import httpx
 import os
 from ..models.projects import Project
@@ -84,7 +86,10 @@ async def post(url: str, data):
             print(f"POST {url} failed: " + resp.text)
             raise MiddleException(status=resp.status_code, detail=parse_error(resp))
 
-    return resp.json()
+    try:
+        return resp.json()
+    except JSONDecodeError as e:
+        return {}
 
 
 async def put(url: str, data: dict):
