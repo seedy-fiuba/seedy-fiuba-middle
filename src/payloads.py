@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from .models.users import ReviewStatus
-from typing import Optional
+from typing import List
 
 
 # Reviews
@@ -26,6 +26,29 @@ class AcceptStagePayload(BaseModel):
 class TransferFundsPayload(BaseModel):
     destinationAddress: str
     amount: float
+
+
+class CreateProjectStagePayload(BaseModel):
+    track: str
+    targetAmount: float
+
+
+class CreateProjectLocationPayload(BaseModel):
+    x: float
+    y: float
+
+
+class CreateProjectPayload(BaseModel):
+    title: str
+    description: str
+    category: str
+    mediaUrls: List[str]
+    stages: List[CreateProjectStagePayload]
+    location: CreateProjectLocationPayload
+    hashtags: List[str]
+    ownerId: int = None
+    reviewerId: int = None
+    finishDate: str
 
 
 # Servers

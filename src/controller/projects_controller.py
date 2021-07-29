@@ -1,5 +1,5 @@
 from src.client.responses.smart_contract import ProjectStatus
-from ..payloads import FundProjectPayload, AcceptStagePayload
+from ..payloads import FundProjectPayload, AcceptStagePayload, CreateProjectPayload
 from ..client import users as users_client, projects as projects_client, smart_contract as sc_client
 from ..client.payloads.smart_contract import FundSCProject, AcceptSCProjectStage
 from ..client.payloads.projects import FundProjectClientPayload, UpdateProjectPayload
@@ -22,6 +22,14 @@ async def search_projects(params: dict):
 
 async def get_project_by_id(id: int):
     return await projects_client.get_project(id)
+
+
+async def create_project(payload: CreateProjectPayload):
+    return await projects_client.create_project(payload)
+
+
+async def update_project(project_id: int, payload: UpdateProjectPayload):
+    return await projects_client.update_project(project_id, payload)
 
 
 async def fund_project(project_id: int, payload: FundProjectPayload):

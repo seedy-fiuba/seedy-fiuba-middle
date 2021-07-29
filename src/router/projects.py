@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status as HTTPStatus
 from fastapi.responses import PlainTextResponse
 from ..controller import projects_controller
-from ..payloads import FundProjectPayload, AcceptStagePayload
+from ..payloads import FundProjectPayload, AcceptStagePayload, \
+    CreateProjectPayload
+from ..client.payloads.projects import UpdateProjectPayload
 from ..responses import ProjectPaginatedResponse
 from typing import List
 from ..models.projects import Project
@@ -43,15 +45,15 @@ async def search_projects(status: Optional[str] = None,
 async def get_project_by_id(project_id: int):
     return await projects_controller.get_project_by_id(project_id)
 
-#
-# @router.post('/')
-# async def create_project(): # TODO add payload
-#     return await projects_controller.create_project()
-#
-#
-# @router.put('/{project_id}')
-# async def update_project(project_id: int): # TODO add payload
-#     return await projects_controller.update_project(project_id)
+
+@router.post('', response_model=Project, status_code=HTTPStatus.HTTP_201_CREATED)
+async def create_project(payload: CreateProjectPayload):
+    return await projects_controller.create_project(payload)
+
+
+@router.put('/{project_id}', response_model=Project)
+async def update_project(project_id: int, payload: UpdateProjectPayload):
+    return await projects_controller.update_project(project_id, payload)
 
 
 @router.post('/{project_id}/fund', response_class=PlainTextResponse)
