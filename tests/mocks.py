@@ -14,12 +14,15 @@ review_template = {
 }
 
 user_template = {
+    'id':10,
     'name': 'Jack',
     'lastName': 'Mac',
     'email': 'jack.mack@gmail.com',
     'role': 'entrepreneur',
     'walletAddress': '0x000',
     'walletPrivateKey': '0x000',
+    'description': '',
+    'firebaseToken': '',
     'createdAt': '',
     'updatedAt': ''
 }
@@ -120,6 +123,13 @@ def mock_get_user(httpx_mock: HTTPXMock, user_id: int, response: dict):
     httpx_mock.add_response(method="GET",
                             url= users_base_url() + f'/users/{user_id}',
                             json=response)
+
+
+def mock_update_user(httpx_mock: HTTPXMock, user_id: int, body: dict, response: dict):
+    httpx_mock.add_response(method="PUT",
+                            url=users_base_url() + f'/users/{user_id}',
+                            json=response,
+                            match_content=str.encode(json.dumps(body)))
 
 
 # SMART CONTRACT
